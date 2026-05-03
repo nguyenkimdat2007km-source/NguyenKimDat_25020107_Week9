@@ -1,4 +1,4 @@
-package main.java.com.practice.coverage;
+package com.practice.coverage;
 
 public class MathUtil {
     public int add(int a, int b) {
