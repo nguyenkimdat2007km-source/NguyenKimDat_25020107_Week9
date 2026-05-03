@@ -2,33 +2,30 @@ name: UET Advanced Programming CI
 
 on:
   push:
-    branches: [ "main" ]
+    # Đã sửa thành master để khớp với máy của Đạt
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master", "main" ]
 
 jobs:
   # ==========================================
-  # JOB 1: Dành cho Bài 3 (Giữ nguyên của bạn)
+  # JOB 1: Bài 3
   # ==========================================
   build-bai3:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Bai3
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-
-      - name: Build with Maven (Test and Package)
+      - name: Build with Maven
         run: ./mvnw clean test package
-
       - name: Store JAR Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -36,90 +33,73 @@ jobs:
           path: Bai3/target/*.jar
 
   # ==========================================
-  # JOB 2: Dành cho Bài 4 (Matrix Strategy)
+  # JOB 2: Bài 4 (Matrix)
   # ==========================================
   test-matrix-bai4:
     strategy:
-      fail-fast: false # Nếu Ubuntu lỗi thì Windows/Mac vẫn tiếp tục chạy
+      fail-fast: false
       matrix:
-        # Chạy đồng thời trên 3 hệ điều hành
         os: [ubuntu-latest, windows-latest, macos-latest]
-
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: ./Bai4
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-
       - name: Run Matrix Tests
-        # Cấp quyền thực thi cho Wrapper và chạy test
         run: |
           chmod +x mvnw
           ./mvnw clean test
+
   # ==========================================
-  # JOB 3: Test Coverage & Quality Enforcement (Bài 5)
+  # JOB 3: Bài 5 (JaCoCo)
   # ==========================================
   coverage-check-bai5:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ./Bai5
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-
       - name: Run Tests and Check Coverage
-        # Lệnh 'verify' sẽ chạy test, đo coverage và kích hoạt luật > 80% của JaCoCo
         run: |
           chmod +x mvnw
           ./mvnw verify
-
-      - name: Upload JaCoCo Report Artifact
+      - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v4
-        # Dùng if: always() để đảm bảo báo cáo luôn được lưu lại kể cả khi test fail
         if: always()
         with:
           name: jacoco-coverage-report
           path: Bai5/target/site/jacoco/
+
   # ==========================================
-  # JOB 4: Pipeline Optimization & Caching (Bài 6)
+  # JOB 4: Bài 6 (Caching)
   # ==========================================
   cache-optimization-bai6:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Bai6
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Set up JDK 17 with Maven Cache
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
           cache: 'maven'
-
       - name: Build and Test
         run: |
           chmod +x mvnw
