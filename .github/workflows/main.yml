@@ -2,14 +2,14 @@ name: UET Advanced Programming CI
 
 on:
   push:
-    # Đã sửa thành master để khớp với máy của Đạt
+    # Đảm bảo chạy trên cả master và main của Đạt
     branches: [ "master", "main" ]
   pull_request:
     branches: [ "master", "main" ]
 
 jobs:
   # ==========================================
-  # JOB 1: Bài 3
+  # JOB 1: Bài 3 (Đã thêm chmod +x)[cite: 1, 2]
   # ==========================================
   build-bai3:
     runs-on: ubuntu-latest
@@ -25,7 +25,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: ./mvnw clean test package
+        run: |
+          chmod +x mvnw
+          ./mvnw clean test package
       - name: Store JAR Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -33,7 +35,7 @@ jobs:
           path: Bai3/target/*.jar
 
   # ==========================================
-  # JOB 2: Bài 4 (Matrix)
+  # JOB 2: Bài 4 (Matrix)[cite: 2]
   # ==========================================
   test-matrix-bai4:
     strategy:
@@ -58,7 +60,7 @@ jobs:
           ./mvnw clean test
 
   # ==========================================
-  # JOB 3: Bài 5 (JaCoCo)
+  # JOB 3: Bài 5 (JaCoCo)[cite: 2]
   # ==========================================
   coverage-check-bai5:
     runs-on: ubuntu-latest
@@ -85,7 +87,7 @@ jobs:
           path: Bai5/target/site/jacoco/
 
   # ==========================================
-  # JOB 4: Bài 6 (Caching)
+  # JOB 4: Bài 6 (Caching)[cite: 2]
   # ==========================================
   cache-optimization-bai6:
     runs-on: ubuntu-latest
