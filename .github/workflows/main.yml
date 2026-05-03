@@ -65,62 +65,62 @@ jobs:
         run: |
           chmod +x mvnw
           ./mvnw clean test
-    # ==========================================
-    # JOB 3: Test Coverage & Quality Enforcement (Bài 5)
-    # ==========================================
-    coverage-check-bai5:
-      runs-on: ubuntu-latest
+  # ==========================================
+  # JOB 3: Test Coverage & Quality Enforcement (Bài 5)
+  # ==========================================
+  coverage-check-bai5:
+    runs-on: ubuntu-latest
 
-      defaults:
-        run:
-          working-directory: ./Bai5
+    defaults:
+      run:
+        working-directory: ./Bai5
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Set up JDK 17
-          uses: actions/setup-java@v4
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-            cache: maven
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-        - name: Run Tests and Check Coverage
-          # Lệnh 'verify' sẽ chạy test, đo coverage và kích hoạt luật > 80% của JaCoCo
-          run: |
-            chmod +x mvnw
-            ./mvnw verify
+      - name: Run Tests and Check Coverage
+        # Lệnh 'verify' sẽ chạy test, đo coverage và kích hoạt luật > 80% của JaCoCo
+        run: |
+          chmod +x mvnw
+          ./mvnw verify
 
-        - name: Upload JaCoCo Report Artifact
-          uses: actions/upload-artifact@v4
-          # Dùng if: always() để đảm bảo báo cáo luôn được lưu lại kể cả khi test fail
-          if: always()
-          with:
-            name: jacoco-coverage-report
-            path: Bai5/target/site/jacoco/
-      # ==========================================
-      # JOB 4: Pipeline Optimization & Caching (Bài 6)
-      # ==========================================
-      cache-optimization-bai6:
-        runs-on: ubuntu-latest
-        defaults:
-          run:
-            working-directory: ./Bai6
+      - name: Upload JaCoCo Report Artifact
+        uses: actions/upload-artifact@v4
+        # Dùng if: always() để đảm bảo báo cáo luôn được lưu lại kể cả khi test fail
+        if: always()
+        with:
+          name: jacoco-coverage-report
+          path: Bai5/target/site/jacoco/
+  # ==========================================
+  # JOB 4: Pipeline Optimization & Caching (Bài 6)
+  # ==========================================
+  cache-optimization-bai6:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Bai6
 
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-          - name: Set up JDK 17 with Maven Cache
-            uses: actions/setup-java@v4
-            with:
-              java-version: '17'
-              distribution: 'temurin'
+      - name: Set up JDK 17 with Maven Cache
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-              cache: 'maven'
+          cache: 'maven'
 
-          - name: Build and Test
-            run: |
-              chmod +x mvnw
-              ./mvnw clean test
+      - name: Build and Test
+        run: |
+          chmod +x mvnw
+          ./mvnw clean test
